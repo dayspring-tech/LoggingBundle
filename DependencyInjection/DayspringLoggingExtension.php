@@ -33,9 +33,5 @@ class DayspringLoggingExtension extends Extension
                 'dayspring_logging.session_request_processor.'.$handler => $definition
             ));
         }
-
-
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.xml');
     }
 }

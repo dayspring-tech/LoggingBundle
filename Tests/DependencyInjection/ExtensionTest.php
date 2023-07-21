@@ -27,7 +27,7 @@ class ExtensionTest extends TestCase
 
         $this->assertEquals(3, count($container->getParameterBag()->all()), '->load() loads the services.xml file');
 
-        $this->assertEquals(2, count($container->getDefinitions()));
+        $this->assertEquals(1, count($container->getDefinitions()));
     }
 
     private function createContainer()
