@@ -31,6 +31,11 @@ class SessionRequestProcessor
         $this->matcher = $matcher;
     }
 
+    protected function getServerVar($var)
+    {
+        return isset($_SERVER[$var]) ? $_SERVER[$var] : null;
+    }
+
     public function __invoke(array $record)
     {
         if (null === $this->requestId) {
@@ -46,11 +51,11 @@ class SessionRequestProcessor
             }
             $this->requestId = substr(uniqid(), -8);
             $this->_server = array(
-                'http.url' => (@$_SERVER['HTTP_HOST']).'/'.(@$_SERVER['REQUEST_URI']),
-                'http.method' => @$_SERVER['REQUEST_METHOD'],
-                'http.useragent' => @$_SERVER['HTTP_USER_AGENT'],
-                'http.referer' => @$_SERVER['HTTP_REFERER'],
-                'http.x_forwarded_for' => @$_SERVER['HTTP_X_FORWARDED_FOR']
+                'http.url' => ($this->getServerVar('HTTP_HOST')).'/'.($this->getServerVar('REQUEST_URI')),
+                'http.method' => $this->getServerVar('REQUEST_METHOD'),
+                'http.useragent' => $this->getServerVar('HTTP_USER_AGENT'),
+                'http.referer' => $this->getServerVar('HTTP_REFERER'),
+                'http.x_forwarded_for' => $this->getServerVar('HTTP_X_FORWARDED_FOR')
             );
             $this->_post = $this->clean($_POST);
             $this->_get = $this->clean($_GET);
