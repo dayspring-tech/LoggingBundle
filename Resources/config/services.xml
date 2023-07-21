@@ -5,11 +5,7 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="Dayspring\LoggingBundle\Logger\SessionRequestProcessor">
-            <argument type="service" id="session" />
-            <argument type="service" id="request_stack" />
-            <argument type="service" id="router" />
-            <tag name="monolog.processor" handler="datadog_json"/>
+        <service id="dayspring.logging.datadog_json_formatter" class="Dayspring\LoggingBundle\Logger\DatadogJsonFormatter">
         </service>
     </services>
 </container>

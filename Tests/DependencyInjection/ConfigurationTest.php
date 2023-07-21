@@ -23,6 +23,8 @@ class ConfigurationTest extends TestCase
         $configuration = new Configuration(array());
         $config = $processor->processConfiguration($configuration, array($config));
 
-        $this->assertEquals([], $config, 'Config should be empty');
+        $this->assertEquals([
+            'session_request_processor_handlers' => []
+        ], $config, 'Config should be empty');
     }
 }

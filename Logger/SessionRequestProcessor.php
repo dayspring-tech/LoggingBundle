@@ -4,14 +4,14 @@ namespace Dayspring\LoggingBundle\Logger;
 
 use Exception;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 
 class SessionRequestProcessor
 {
 
-    /** @var Session $session */
+    /** @var SessionInterface $session */
     private $session;
     /** @var RequestStack $requestStack */
     private $requestStack;
@@ -24,7 +24,7 @@ class SessionRequestProcessor
     private $_get;
     private $_post;
 
-    public function __construct(Session $session, RequestStack $requestStack, $matcher)
+    public function __construct(SessionInterface $session, RequestStack $requestStack, UrlMatcherInterface $matcher)
     {
         $this->session = $session;
         $this->requestStack = $requestStack;
