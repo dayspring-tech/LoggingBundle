@@ -1,0 +1,39 @@
+{
+    "name": "dayspring-tech/logging-bundle",
+    "description": "Adds additional context data to log messages",
+    "keywords": [
+        "logging",
+        "session",
+        "request"
+    ],
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "require": {
+        "symfony/framework-bundle": "^4.4|^5.0"
+
+    },
+    "require-dev": {
+        "php": ">=7.4",
+        "phpunit/phpunit": "~8.5.33|^9.0"
+    },
+    "authors": [
+        {
+            "name": "Jeffrey Wong",
+            "email": "jwong@dayspringpartners.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Dayspring\\LoggingBundle\\": ""
+        },
+        "exclude-from-classmap": [
+            "Tests/"
+        ]
+    },
+    "scripts": {
+        "ci-test": [
+            "Composer\\Config::disableProcessTimeout",
+            "vendor/phpunit/phpunit/phpunit -c ./phpunit.xml.dist"
+        ]
+    }
+}
