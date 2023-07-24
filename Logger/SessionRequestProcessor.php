@@ -68,8 +68,8 @@ class SessionRequestProcessor
         $record['http.referer'] = $this->_server['http.referer'];
         $record['http.x_forwarded_for'] = $this->_server['http.x_forwarded_for'];
 
-        if ($this->requestStack->getMasterRequest()) {
-            $request = $this->requestStack->getMasterRequest();
+        if ($this->getMainRequest()) {
+            $request = $this->getMainRequest();
             $context = [
                 'request_uri'      => $request->getUri(),
                 'method'           => $request->getMethod(),
@@ -93,6 +93,20 @@ class SessionRequestProcessor
 
         return $record;
     }
+
+    /**
+     * Compatibility with Symfony <5.3
+     * @return \Symfony\Component\HttpFoundation\Request|null
+     */
+    protected function getMainRequest()
+    {
+        if (method_exists(RequestStack::class, 'getMainRequest')) {
+            return $this->requestStack->getMainRequest();
+        } else {
+            return $this->requestStack->getMasterRequest();
+        }
+    }
+
 
     protected function clean($array)
     {
