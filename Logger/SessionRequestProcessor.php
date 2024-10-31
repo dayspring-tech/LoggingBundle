@@ -24,6 +24,8 @@ class SessionRequestProcessor
     private $_get;
     private $_post;
 
+    protected $extraFields = [];
+
     public function __construct(SessionInterface $session, RequestStack $requestStack, UrlMatcherInterface $matcher)
     {
         $this->session = $session;
@@ -35,6 +37,16 @@ class SessionRequestProcessor
     {
         return isset($_SERVER[$var]) ? $_SERVER[$var] : null;
     }
+
+    public function setExtraField($key, $value)
+    {
+        $this->extraFields[$key] = $value;
+    }
+
+    public function clearExtraFields()
+    {
+        $this->extraFields = [];
+    }    
 
     public function __invoke(array $record)
     {
@@ -90,6 +102,8 @@ class SessionRequestProcessor
                 $record['context'] = $context;
             }
         }
+
+        $record = array_merge($record, $this->extraFields);
 
         return $record;
     }
