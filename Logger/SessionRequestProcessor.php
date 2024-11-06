@@ -43,6 +43,11 @@ class SessionRequestProcessor
         $this->extraFields[$key] = $value;
     }
 
+    public function unsetExtraField($key)
+    {
+        unset($this->extraFields[$key]);
+    }
+
     public function clearExtraFields()
     {
         $this->extraFields = [];
