@@ -15,6 +15,11 @@ return RectorConfig::configure()
         SymfonySetList::SYMFONY_52,
         SymfonySetList::SYMFONY_53,
         SymfonySetList::SYMFONY_54,
+        SymfonySetList::SYMFONY_60,
+        SymfonySetList::SYMFONY_61,
+        SymfonySetList::SYMFONY_62,
+        SymfonySetList::SYMFONY_63,
+        SymfonySetList::SYMFONY_64,
     ])
     ->withSkip([
         __DIR__ . '/vendor',
