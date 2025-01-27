@@ -122,7 +122,7 @@ class SessionRequestProcessor
         if (method_exists(RequestStack::class, 'getMainRequest')) {
             return $this->requestStack->getMainRequest();
         } else {
-            return $this->requestStack->getMainRequest();
+            return $this->requestStack->getMasterRequest();
         }
     }
 
