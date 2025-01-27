@@ -26,12 +26,12 @@ class DayspringLoggingExtension extends Extension
 
         foreach ($config['session_request_processor_handlers'] as $handler) {
             $definition = new Definition(SessionRequestProcessor::class);
-            $definition->addTag('monolog.processor', array('handler' => $handler));
+            $definition->addTag('monolog.processor', ['handler' => $handler]);
             $definition->setAutowired(true);
 
-            $container->addDefinitions(array(
+            $container->addDefinitions([
                 'dayspring_logging.session_request_processor.'.$handler => $definition
-            ));
+            ]);
         }
     }
 }

@@ -35,7 +35,7 @@ class SessionRequestProcessor
 
     protected function getServerVar($var)
     {
-        return isset($_SERVER[$var]) ? $_SERVER[$var] : null;
+        return $_SERVER[$var] ?? null;
     }
 
     public function setExtraField($key, $value)
@@ -67,13 +67,13 @@ class SessionRequestProcessor
                 }
             }
             $this->requestId = substr(uniqid(), -8);
-            $this->_server = array(
+            $this->_server = [
                 'http.url' => ($this->getServerVar('HTTP_HOST')).'/'.($this->getServerVar('REQUEST_URI')),
                 'http.method' => $this->getServerVar('REQUEST_METHOD'),
                 'http.useragent' => $this->getServerVar('HTTP_USER_AGENT'),
                 'http.referer' => $this->getServerVar('HTTP_REFERER'),
                 'http.x_forwarded_for' => $this->getServerVar('HTTP_X_FORWARDED_FOR')
-            );
+            ];
             $this->_post = $this->clean($_POST);
             $this->_get = $this->clean($_GET);
         }
@@ -97,7 +97,7 @@ class SessionRequestProcessor
                 } else {
                     $parameters = $this->matcher->match($request->getPathInfo());
                 }
-                $context['route'] = isset($parameters['_route']) ? $parameters['_route'] : 'n/a';
+                $context['route'] = $parameters['_route'] ?? 'n/a';
                 $context['route_parameters'] = $parameters;
             } catch (Exception $e) {
             }
@@ -122,14 +122,14 @@ class SessionRequestProcessor
         if (method_exists(RequestStack::class, 'getMainRequest')) {
             return $this->requestStack->getMainRequest();
         } else {
-            return $this->requestStack->getMasterRequest();
+            return $this->requestStack->getMainRequest();
         }
     }
 
 
     protected function clean($array)
     {
-        $toReturn = array();
+        $toReturn = [];
         foreach (array_keys($array) as $key) {
             if (false !== strpos($key, 'password')) {
                 // Do not add
