@@ -4,15 +4,12 @@ namespace Dayspring\LoggingBundle\Logger;
 
 use Exception;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 
 class SessionRequestProcessor
 {
 
-    /** @var SessionInterface $session */
-    private $session;
     /** @var RequestStack $requestStack */
     private $requestStack;
     /** @var UrlMatcherInterface|RequestMatcherInterface $matcher */
@@ -26,9 +23,8 @@ class SessionRequestProcessor
 
     protected $extraFields = [];
 
-    public function __construct(SessionInterface $session, RequestStack $requestStack, UrlMatcherInterface $matcher)
+    public function __construct(RequestStack $requestStack, UrlMatcherInterface $matcher)
     {
-        $this->session = $session;
         $this->requestStack = $requestStack;
         $this->matcher = $matcher;
     }
@@ -60,8 +56,8 @@ class SessionRequestProcessor
                 $this->sessionId = getmypid();
             } else {
                 try {
-                    $this->session->start();
-                    $this->sessionId = $this->session->getId();
+                    $this->requestStack->getSession()->start();
+                    $this->sessionId = $this->requestStack->getSession()->getId();
                 } catch (\RuntimeException $e) {
                     $this->sessionId = '????????';
                 }

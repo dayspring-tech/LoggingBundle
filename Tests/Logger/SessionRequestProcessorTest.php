@@ -17,7 +17,6 @@ class SessionRequestProcessorTest extends TestCase
 {
     public function testProcessor()
     {
-        $session = new Session();
         $requestStack = new RequestStack();
         $requestStack->push(Request::create('/', 'GET'));
         $router = $this->createPartialMock(Router::class, ['matchRequest']);
@@ -25,7 +24,7 @@ class SessionRequestProcessorTest extends TestCase
             ->method('matchRequest')
             ->willReturn(['_route' => 'test']);
 
-        $processor = new SessionRequestProcessor($session, $requestStack, $router);
+        $processor = new SessionRequestProcessor($requestStack, $router);
 
         $handler = new TestHandler();
 
