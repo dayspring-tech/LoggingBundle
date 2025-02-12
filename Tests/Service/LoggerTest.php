@@ -6,7 +6,6 @@ use Dayspring\LoggingBundle\Logger\SessionRequestProcessor;
 use Dayspring\LoggingBundle\Tests\TestKernel;
 use Monolog\Handler\TestHandler;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use function array_unshift;
 
 class LoggerTest extends WebTestCase
 {

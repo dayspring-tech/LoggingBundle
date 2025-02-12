@@ -17,6 +17,7 @@
         "phpunit/phpunit": "~8.5.33|^9.0",
         "rector/rector": "^2.0",
         "symfony/yaml": "^4.4|^5.0|^6.0",
+        "symfony/monolog-bridge": "^4.4|^5.0|^6.0",
         "symfony/monolog-bundle": "^3.0"
     },
     "authors": [
