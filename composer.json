@@ -9,14 +9,15 @@
     "type": "symfony-bundle",
     "license": "MIT",
     "require": {
-        "symfony/framework-bundle": "^4.4|^5.0|^6.0"
-
+        "symfony/framework-bundle": "^4.4|^5.0|^6.0",
+        "monolog/monolog": "^1.22 || ^2.0"
     },
     "require-dev": {
         "php": ">=7.4",
         "phpunit/phpunit": "~8.5.33|^9.0",
-        "monolog/monolog": "^1.22 || ^2.0",
-        "rector/rector": "^2.0"
+        "rector/rector": "^2.0",
+        "symfony/yaml": "^6.4",
+        "symfony/monolog-bundle": "^3.10"
     },
     "authors": [
         {

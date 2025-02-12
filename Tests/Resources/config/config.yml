@@ -1,0 +1,35 @@
+imports:
+
+framework:
+    test: ~
+    secret: xxxxxxxxxx
+    router:        { resource: "%kernel.project_dir%/Resources/config/routing.yml" }
+    #serializer:      { enable_annotations: true }
+    #templating:    { engines: ['twig', 'php'] }
+    session:
+        storage_factory_id: session.storage.factory.mock_file
+    profiler:
+        collect: false
+
+services:
+    Monolog\Handler\TestHandler:
+        public: true
+
+    test_logger:
+        alias: logger
+        public: true
+
+    test_session_request_processor:
+        alias: dayspring_logging.session_request_processor.main
+        public: true
+
+monolog:
+    handlers:
+        main:
+            type: service
+            id: Monolog\Handler\TestHandler
+            level: debug
+
+dayspring_logging:
+    session_request_processor_handlers:
+        - main

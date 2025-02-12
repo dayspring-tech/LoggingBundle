@@ -1,0 +1,6 @@
+propel:
+   dbal:
+        driver:   mysql
+        user:     symfonydevuser
+        password: symfonydevpass
+        dsn:      mysql:host=lydia.dayspring.office;dbname=securitybundle;charset=UTF8
