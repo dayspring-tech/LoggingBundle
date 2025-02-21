@@ -52,16 +52,6 @@ class SessionRequestProcessor
     public function __invoke(array $record)
     {
         if (null === $this->requestId) {
-            if (!array_key_exists('SERVER_NAME', $_SERVER)) {
-                $this->sessionId = getmypid();
-            } else {
-                try {
-                    $this->requestStack->getSession()->start();
-                    $this->sessionId = $this->requestStack->getSession()->getId();
-                } catch (\RuntimeException $e) {
-                    $this->sessionId = '????????';
-                }
-            }
             $this->requestId = substr(uniqid(), -8);
             $this->_server = [
                 'http.url' => ($this->getServerVar('HTTP_HOST')).'/'.($this->getServerVar('REQUEST_URI')),
@@ -72,6 +62,17 @@ class SessionRequestProcessor
             ];
             $this->_post = $this->clean($_POST);
             $this->_get = $this->clean($_GET);
+        }
+        if (null === $this->sessionId) {
+            if (!array_key_exists('SERVER_NAME', $_SERVER)) {
+                $this->sessionId = getmypid();
+            } elseif ($this->requestStack->getMainRequest() && $this->requestStack->getMainRequest()->getSession()) {
+                try {
+                    $this->sessionId = $this->requestStack->getSession()->getId();
+                } catch (\RuntimeException $e) {
+                    $this->sessionId = '????????';
+                }
+            }
         }
         $record['http.request_id'] = $this->requestId;
         $record['http.session_id'] = $this->sessionId;

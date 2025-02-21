@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
 use Symfony\Component\Routing\Router;
+use function var_dump;
 
 class SessionRequestProcessorTest extends TestCase
 {
@@ -76,8 +77,6 @@ class SessionRequestProcessorTest extends TestCase
 
     public function testProcessorNoRequest()
     {
-        $this->markTestSkipped('This test is not working as expected');
-
         $requestStack = new RequestStack();
         $router = $this->createPartialMock(Router::class, ['matchRequest']);
 
@@ -94,6 +93,39 @@ class SessionRequestProcessorTest extends TestCase
         $this->assertCount(1, $records);
         $record = $records[0];
         $this->assertArrayNotHasKey('route', $record['context']);
-        $this->assertArrayNotHasKey('http.session_id', $record);
+        $this->assertNull($record['http.session_id']);
+    }
+
+
+    public function testProcessorRequestAddedLater()
+    {
+        $requestStack = new RequestStack();
+        $router = $this->createPartialMock(Router::class, ['matchRequest']);
+
+        $processor = new SessionRequestProcessor($requestStack, $router);
+
+        $handler = new TestHandler();
+
+        $logger = new Logger('test', [$handler], [$processor]);
+
+        $logger->info('test');
+
+        $request = Request::create('/', 'GET');
+        $request->setSession(new Session(new MockFileSessionStorage()));
+        $requestStack->push($request);
+
+        $logger->info('test with session');
+
+        $records = $handler->getRecords();
+
+        $this->assertCount(2, $records);
+        $record = $records[0];
+        $this->assertArrayNotHasKey('route', $record['context']);
+        $this->assertNull($record['http.session_id']);
+
+        $record2 = $records[1];
+        $this->assertArrayHasKey('route', $record2['context']);
+        $this->assertNotNull($record2['http.session_id']);
+        $this->assertEquals($record['http.request_id'], $record2['http.request_id']);
     }
 }
