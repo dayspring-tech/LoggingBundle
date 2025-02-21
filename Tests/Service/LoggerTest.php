@@ -6,6 +6,9 @@ use Dayspring\LoggingBundle\Logger\SessionRequestProcessor;
 use Dayspring\LoggingBundle\Tests\TestKernel;
 use Monolog\Handler\TestHandler;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
 
 class LoggerTest extends WebTestCase
 {
@@ -14,6 +17,12 @@ class LoggerTest extends WebTestCase
         parent::setUp();
 
         self::bootKernel();
+
+        $request = Request::create('/', 'GET');
+        $request->setSession(new Session(new MockFileSessionStorage()));
+
+        $requestStack = static::$kernel->getContainer()->get('request_stack');
+        $requestStack->push($request);
     }
 
     protected static function getKernelClass(): string

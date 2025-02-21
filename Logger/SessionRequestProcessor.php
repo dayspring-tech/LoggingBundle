@@ -47,12 +47,12 @@ class SessionRequestProcessor
     public function clearExtraFields()
     {
         $this->extraFields = [];
-    }    
+    }
 
     public function __invoke(array $record)
     {
         if (null === $this->requestId) {
-            if ('cli' === php_sapi_name()) {
+            if (!array_key_exists('SERVER_NAME', $_SERVER)) {
                 $this->sessionId = getmypid();
             } else {
                 try {
