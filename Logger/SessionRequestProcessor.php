@@ -66,7 +66,7 @@ class SessionRequestProcessor
         if (null === $this->sessionId) {
             if (!array_key_exists('SERVER_NAME', $_SERVER)) {
                 $this->sessionId = getmypid();
-            } elseif ($this->requestStack->getMainRequest() && $this->requestStack->getMainRequest()->getSession()) {
+            } elseif ($this->requestStack->getMainRequest() && $this->requestStack->getMainRequest()->hasSession()) {
                 try {
                     $this->sessionId = $this->requestStack->getSession()->getId();
                 } catch (\RuntimeException $e) {
