@@ -20,7 +20,7 @@ class ExtensionTest extends TestCase
     {
         $container = $this->createContainer();
         $extension = new DayspringLoggingExtension();
-        $extension->load(array(), $container);
+        $extension->load([], $container);
         $container->registerExtension($extension);
 
         $this->compileContainer($container);
@@ -32,19 +32,19 @@ class ExtensionTest extends TestCase
 
     private function createContainer()
     {
-        $container = new ContainerBuilder(new ParameterBag(array(
+        $container = new ContainerBuilder(new ParameterBag([
             'kernel.cache_dir' => __DIR__,
             'kernel.charset'   => 'UTF-8',
             'kernel.debug'     => false,
-        )));
+        ]));
 
         return $container;
     }
 
     private function compileContainer(ContainerBuilder $container)
     {
-        $container->getCompilerPassConfig()->setOptimizationPasses(array());
-        $container->getCompilerPassConfig()->setRemovingPasses(array());
+        $container->getCompilerPassConfig()->setOptimizationPasses([]);
+        $container->getCompilerPassConfig()->setRemovingPasses([]);
         $container->compile();
     }
 }

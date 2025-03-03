@@ -4,15 +4,12 @@ namespace Dayspring\LoggingBundle\Logger;
 
 use Exception;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 
 class SessionRequestProcessor
 {
 
-    /** @var SessionInterface $session */
-    private $session;
     /** @var RequestStack $requestStack */
     private $requestStack;
     /** @var UrlMatcherInterface|RequestMatcherInterface $matcher */
@@ -26,16 +23,15 @@ class SessionRequestProcessor
 
     protected $extraFields = [];
 
-    public function __construct(SessionInterface $session, RequestStack $requestStack, UrlMatcherInterface $matcher)
+    public function __construct(RequestStack $requestStack, UrlMatcherInterface $matcher)
     {
-        $this->session = $session;
         $this->requestStack = $requestStack;
         $this->matcher = $matcher;
     }
 
     protected function getServerVar($var)
     {
-        return isset($_SERVER[$var]) ? $_SERVER[$var] : null;
+        return $_SERVER[$var] ?? null;
     }
 
     public function setExtraField($key, $value)
@@ -51,31 +47,32 @@ class SessionRequestProcessor
     public function clearExtraFields()
     {
         $this->extraFields = [];
-    }    
+    }
 
     public function __invoke(array $record)
     {
         if (null === $this->requestId) {
-            if ('cli' === php_sapi_name()) {
-                $this->sessionId = getmypid();
-            } else {
-                try {
-                    $this->session->start();
-                    $this->sessionId = $this->session->getId();
-                } catch (\RuntimeException $e) {
-                    $this->sessionId = '????????';
-                }
-            }
             $this->requestId = substr(uniqid(), -8);
-            $this->_server = array(
+            $this->_server = [
                 'http.url' => ($this->getServerVar('HTTP_HOST')).'/'.($this->getServerVar('REQUEST_URI')),
                 'http.method' => $this->getServerVar('REQUEST_METHOD'),
                 'http.useragent' => $this->getServerVar('HTTP_USER_AGENT'),
                 'http.referer' => $this->getServerVar('HTTP_REFERER'),
                 'http.x_forwarded_for' => $this->getServerVar('HTTP_X_FORWARDED_FOR')
-            );
+            ];
             $this->_post = $this->clean($_POST);
             $this->_get = $this->clean($_GET);
+        }
+        if (null === $this->sessionId) {
+            if (!array_key_exists('SERVER_NAME', $_SERVER)) {
+                $this->sessionId = getmypid();
+            } elseif ($this->requestStack->getMainRequest() && $this->requestStack->getMainRequest()->hasSession()) {
+                try {
+                    $this->sessionId = $this->requestStack->getSession()->getId();
+                } catch (\RuntimeException $e) {
+                    $this->sessionId = '????????';
+                }
+            }
         }
         $record['http.request_id'] = $this->requestId;
         $record['http.session_id'] = $this->sessionId;
@@ -97,7 +94,7 @@ class SessionRequestProcessor
                 } else {
                     $parameters = $this->matcher->match($request->getPathInfo());
                 }
-                $context['route'] = isset($parameters['_route']) ? $parameters['_route'] : 'n/a';
+                $context['route'] = $parameters['_route'] ?? 'n/a';
                 $context['route_parameters'] = $parameters;
             } catch (Exception $e) {
             }
@@ -129,7 +126,7 @@ class SessionRequestProcessor
 
     protected function clean($array)
     {
-        $toReturn = array();
+        $toReturn = [];
         foreach (array_keys($array) as $key) {
             if (false !== strpos($key, 'password')) {
                 // Do not add

@@ -2,3 +2,5 @@
 /build/
 /composer.lock
 /.phpunit.result.cache
+
+var/cache/

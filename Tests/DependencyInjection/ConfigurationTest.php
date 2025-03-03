@@ -17,11 +17,11 @@ class ConfigurationTest extends TestCase
 
     public function testConfiguration()
     {
-        $config = array();
+        $config = [];
 
         $processor = new Processor();
-        $configuration = new Configuration(array());
-        $config = $processor->processConfiguration($configuration, array($config));
+        $configuration = new Configuration([]);
+        $config = $processor->processConfiguration($configuration, [$config]);
 
         $this->assertEquals([
             'session_request_processor_handlers' => []
